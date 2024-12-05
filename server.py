@@ -20,6 +20,10 @@ def sent_analyzer():
     # Retrieve the text to analyze from the request arguments
     text_to_analyze = request.args.get('textToAnalyze')
 
+    if not text_to_analyze:
+        # If there's no text provided, return the error message
+        return render_template('index.html', error="Please provide some text to analyze.")
+
     # Pass the text to the sentiment_analyzer function and store the response
     response = sentiment_analyzer(text_to_analyze)
 
@@ -27,8 +31,13 @@ def sent_analyzer():
     label = response['label']
     score = response['score']
 
-    # Return a formatted string with the sentiment label and score
-    return "The given text has been identified as {} with a score of {}.".format(label.upper(), score)
+    # Check if the label is None, indicating an error or invalid input
+    if label is None:
+        print("Invalid input! Try again.")  # Print error in the console
+        return "Invalid input! Try again."  # Return error message to the client
+    else:
+        # Return a formatted string with the sentiment label and score
+        return "The given text has been identified as {} with a score of {}.".format(label.upper(), score)
 
 @app.route("/")
 def render_index_page():
