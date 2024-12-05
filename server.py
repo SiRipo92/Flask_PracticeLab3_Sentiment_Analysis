@@ -4,28 +4,31 @@
 '''
 # Import necessary packages
 from flask import Flask, render_template, request
-from sentiment_analysis import sentiment_analyzer # Import the sentiment analyzer function
+from SentimentAnalysis.sentiment_analysis import sentiment_analyzer # Import the sentiment analyzer function
 
 
 # Initiate the flask app
-app = Flask(__name__)
+app = Flask("Sentiment Analyzer")
 
-@app.route("/sentimentAnalyzer", methods=["POST"])
+@app.route("/sentimentAnalyzer")
 def sent_analyzer():
     ''' This code receives the text from the HTML interface and 
         runs sentiment analysis over it using sentiment_analysis()
         function. The output returned shows the label and its confidence 
         score for the provided text.
     '''
-    if request.method == "POST":
-        text_to_analyze = request.form["text"]  # Get the text from the HTML form
-        result = sentiment_analyzer(text_to_analyze)  # Call sentiment analysis function
-        
-        # Extract sentiment label and score from the result
-        sentiment_label = result.get("label", "No Label Found")
-        sentiment_score = result.get("score", "No Score Found")
-        
-        return render_template("index.html", label=sentiment_label, score=sentiment_score)
+    # Retrieve the text to analyze from the request arguments
+    text_to_analyze = request.args.get('textToAnalyze')
+
+    # Pass the text to the sentiment_analyzer function and store the response
+    response = sentiment_analyzer(text_to_analyze)
+
+    # Extract the label and score from the response
+    label = response['label']
+    score = response['score']
+
+    # Return a formatted string with the sentiment label and score
+    return "The given text has been identified as {} with a score of {}.".format(label.upper(), score)
 
 @app.route("/")
 def render_index_page():
