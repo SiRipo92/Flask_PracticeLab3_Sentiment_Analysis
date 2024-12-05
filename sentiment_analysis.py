@@ -1,5 +1,6 @@
 import requests # Import the requests library to handle HTTP requests
 import os
+import  json
 from dotenv import load_dotenv # Load environment variables from a .env file
 from requests.auth import HTTPBasicAuth
 
@@ -35,5 +36,13 @@ def sentiment_analyzer(text_to_analyse):
     # Raise an exception if the response contains an error
     response.raise_for_status()
     
-    # Return the JSON response with the sentiment analysis results
-    return response.json()
+     # Parse the response JSON text into a dictionary
+    formatted_response = json.loads(response.text)
+    
+    # Extract the label and score from the nested dictionary
+    label = formatted_response['sentiment']['document']['label']
+    score = formatted_response['sentiment']['document']['score']
+
+    
+    # Return the extracted values as a dictionary
+    return {'label': label, 'score': score}
