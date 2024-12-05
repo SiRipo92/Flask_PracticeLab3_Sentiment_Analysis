@@ -4,7 +4,7 @@
 '''
 # Import necessary packages
 from flask import Flask, render_template, request
-from SentimentAnalysis.sentiment_analysis import sentiment_analyzer # Import the sentiment analyzer function
+from SentimentAnalysis.sentiment_analysis import sentiment_analyzer
 
 
 # Initiate the flask app
@@ -35,9 +35,9 @@ def sent_analyzer():
     if label is None:
         print("Invalid input! Try again.")  # Print error in the console
         return "Invalid input! Try again."  # Return error message to the client
-    else:
-        # Return a formatted string with the sentiment label and score
-        return "The given text has been identified as {} with a score of {}.".format(label.upper(), score)
+    # Return a formatted string with the sentiment label and score
+    return f"The given text has been identified as {label.upper()} " \
+       f"with a score of {score}."
 
 @app.route("/")
 def render_index_page():
@@ -45,5 +45,4 @@ def render_index_page():
     return render_template("index.html")
 
 if __name__ == "__main__":
-    '''This function runs the Flask app and deploys it locally on port 5000.'''
     app.run(debug=True)
